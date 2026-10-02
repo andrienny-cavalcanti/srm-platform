@@ -14,8 +14,14 @@ def get_or_create_conversation(db: Session, session_id: str):
     return conversation
 
 
-def create_lead(db: Session, intent: str, canal="chat_web"):
+def create_lead(
+    db: Session,
+    intent: str,
+    canal="chat_web",
+    company_id: int | None = None
+):
     lead = Lead(
+        company_id=company_id,
         canal_origem=canal,
         objetivo=intent,
         status="EM_QUALIFICACAO"

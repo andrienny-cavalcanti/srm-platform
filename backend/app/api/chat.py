@@ -2,7 +2,7 @@
 from sqlalchemy.orm import Session
 
 from app.db.database import get_db
-from app.db.models import Lead, Conversation, Message , User
+from app.db.models import Company, Lead, Conversation, Message , User
 from app.schemas.chat import (
     ChatRequest,
     ChatResponse,
@@ -26,6 +26,21 @@ router = APIRouter(tags=["chat"])
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(payload: ChatRequest, db: Session = Depends(get_db)):
+    company = (
+        db.query(Company)
+        .filter(
+            Company.slug == payload.company_slug,
+            Company.ativo == 1
+        )
+        .first()
+    )
+
+    if not company:
+        raise HTTPException(
+            status_code=404,
+            detail="Empresa não encontrada ou inativa"
+        )
+    
     # Recupera ou cria a conversa
     conversation = get_or_create_conversation(
         db,
@@ -47,7 +62,7 @@ def chat(payload: ChatRequest, db: Session = Depends(get_db)):
     lead = conversation.lead
 
     if lead is None:
-        lead = create_lead(db, intent)
+        lead = create_lead(db, intent, company_id=company.id)
 
         conversation.lead_id = lead.id
         db.commit()
