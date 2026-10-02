@@ -106,7 +106,9 @@ def chat(payload: ChatRequest, db: Session = Depends(get_db)):
     ]
 
     if all(required_fields):
-        lead.status = "PRONTO_PARA_CONSULTOR"
+        if lead.status == "EM_QUALIFICACAO":
+            lead.status = "PRONTO_PARA_CONSULTOR"
+
         lead.nivel_interesse = "ALTO"
         db.commit()
         db.refresh(lead)
