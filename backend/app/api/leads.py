@@ -512,6 +512,8 @@ def list_consultants(
         .all()
     )
 
+    return consultants
+
 @router.post("/consultants", response_model=ConsultantOut)
 def create_consultant(
     payload: ConsultantCreate,
