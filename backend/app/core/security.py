@@ -2,7 +2,8 @@ from datetime import datetime, timedelta, timezone
 from pwdlib import PasswordHash
 from jose import jwt
 
-SECRET_KEY = "BEM_MAIS_AI_DEV_SECRET_2026"
+from .config import JWT_SECRET_KEY
+
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 
@@ -19,4 +20,4 @@ def criar_token(data: dict) -> str:
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES
     )
     payload.update({"exp": expiracao})
-    return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(payload, JWT_SECRET_KEY, algorithm=ALGORITHM)
