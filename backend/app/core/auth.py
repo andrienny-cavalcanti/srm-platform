@@ -1,8 +1,8 @@
-﻿from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
 
-from app.core.security import SECRET_KEY, ALGORITHM
+from app.core.security import JWT_SECRET_KEY, ALGORITHM
 
 security = HTTPBearer()
 
@@ -15,7 +15,7 @@ def obter_usuario_token(
     try:
         payload = jwt.decode(
             token,
-            SECRET_KEY,
+            JWT_SECRET_KEY,
             algorithms=[ALGORITHM]
         )
     except JWTError:

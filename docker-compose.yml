@@ -20,6 +20,8 @@ services:
       - ./knowledge:/knowledge
     env_file:
       - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg://bemmais:bemmais@db:5432/bemmais_ai
     command: >
       sh -c "pip install -r requirements.txt &&
              python -c 'from app.db.database import Base, engine; Base.metadata.create_all(engine)' &&

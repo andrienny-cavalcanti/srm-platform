@@ -41,8 +41,21 @@ def create_lead(
 ):
     company_id = usuario.get("company_id")
 
+    dados = payload.model_dump()
+
+    # =========================================================
+    # REGRA DE CRIAÇÃO DO LEAD
+    # =========================================================
+    # CONSULTOR não pode criar um lead já atribuído
+    # nem escolher diretamente o status.
+    # =========================================================
+
+    if usuario.get("role") == "CONSULTOR":
+        dados["status"] = "NOVO"
+        dados["consultor_id"] = None
+
     lead = Lead(
-        **payload.model_dump(),
+        **dados,
         company_id=company_id
     )
 
@@ -51,7 +64,6 @@ def create_lead(
     db.refresh(lead)
 
     return lead
-
 # =========================================================
 # SOLICITAÇÃO DE ALTERAÇÃO DE STATUS
 # =========================================================
